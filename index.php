@@ -1,7 +1,6 @@
 <?php
 
     require ("config.php");
-
     $action = isset( $_GET['action']) ? $_GET['action'] : "";
 
     switch( $action )
@@ -31,7 +30,7 @@
 
     function viewArticle()
     {
-        if( !isset( $GET['articleId']) || !$GET['articleId'] )
+        if( !isset( $_GET['articleId']) || !$_GET['articleId'] )
         {
             homepage();
             return;
@@ -39,7 +38,7 @@
 
         
         $results = array();
-        $results['article'] = Article::getById( (int)$GET['articleId'] );
+        $results['article'] = Article::getById( (int)$_GET['articleId'] );
         $results['pageTitle'] = $results['article']->title . " | Blog Of Rituraj";
 
         require( TEMPLATE_PATH . "/viewArticle.php" );

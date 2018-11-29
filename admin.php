@@ -79,7 +79,7 @@
             $article = new Article;
             $article->storeFromValues( $_POST );
             $article->insert();
-
+            
             header( "Location: admin.php?status=changesSaved" );
         }
         elseif( isset( $_POST['cancel'] ) )
@@ -105,11 +105,11 @@
         {
             // user has posted the edit article form: update it
 
-            /*if( !article = Article::getById( (int)$_POST['articleId'] ) )
+            if( !$article = Article::getById( (int)$_POST['articleId'] ) )
             {
                 header( "location: admin.php?status=articleNotFound");
                 return;
-            }*/
+            }
 
             $article->storeFromValues( $_POST );
             $article->update();
@@ -131,11 +131,11 @@
 
     function deleteArticle()
     {
-        /*if( !article = Article::getById( (int)$_GET['articleId'] )) 
+        if( !$article = Article::getById( (int)$_GET['articleId'] )) 
         {
             header( "Location:admin.php?error=articleNotFound" );
             return;
-        }*/
+        }
 
         $article->delete();
         header( "Location: admin.php?status=articleDeleted" );

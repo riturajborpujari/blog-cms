@@ -36,7 +36,7 @@
  
       </table>
  
-      <p><?php echo $results['totalRows']?> article<?php echo ( $results['totalRows'] != 1 ) ? 's' : '' ?> in total.</p>
+      <p><?php echo (int)$results['totalRows']?> article<?php echo ( (int)$results['totalRows'] > 1 ) ? 's' : '' ?> in total.</p>
  
       <p><a href="admin.php?action=newArticle">Add a New Article</a></p>
  

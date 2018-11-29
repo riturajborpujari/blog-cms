@@ -18,8 +18,8 @@ class Article
 	{
 		if( isset( $data['id'] ) )
 			$this->id = (int) $data['id'];
-		if( isset( $data['pubDate'] ) )
-			$this->publicationDate = (int) $data['publicationDate'];
+		if( isset( $data['publicationDate'] ) )
+			$this->publicationDate = $data['publicationDate'];
 		if( isset( $data['title'] ) )
 			$this->title = preg_replace ( "/[^\.\,\-\_\'\"\@\?\!\:\$ a-zA-Z0-9()]/", "", $data['title'] );
 		if( isset( $data['summary'] ) ) 
@@ -28,7 +28,7 @@ class Article
 			$this->content = $data['content'];
 	}
 
-	public function storeFormValues ( $params ) 
+	public function storeFromValues ( $params ) 
 	{
 		// Store all the parameters
 		$this->__construct( $params );
@@ -48,7 +48,7 @@ class Article
 
 	public static function getById( $id )
 	{
-		$conn = new PDO( DB_DSN, DB_USERNAME, db_PASSWORD);
+		$conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD);
 		$query = "SELECT *, UNIX_TIMESTAMP(publicationDate) AS publicationDate from articles WHERE id = :id";
 		$st = $conn->prepare( $query );
 		$st->bindValue( ":id", $id, PDO::PARAM_INT );
@@ -62,9 +62,9 @@ class Article
 
 	public static function getList( $numRows = 1000, $order = "publicationDate Desc" )
 	{
-		$conn = new PDO( DB_DSN, DB_USERNAME< DB_PASSWORD);
+		$conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD);
 		$query = "SELECT SQL_CALC_FOUND_ROWS *, UNIX_TIMESTAMP(publicationDate) AS publicationDate FROM articles ORDER BY " 
-			. mysql_escape_string($order) . " LIMIT :numRows" ;
+			. $order . " LIMIT :numRows" ;
 		$st = $conn->prepare($query);
 		$st->bindValue(":numRows", $numRows, PDO::PARAM_INT);
 		$st->execute();
@@ -74,26 +74,28 @@ class Article
 		while ( $row = $st->fetch() )
 		{
 			$article = new Article( $row );
-			$list[] = article;
+			$list[] = $article;
 		}
 
 		// get the total number of articles
 		$query = "SELECT FOUND_ROWS AS totalRows";
-		$totalRows = $conn->query( $query ) -> fetch();
+		$st = $conn->prepare( $query );
+		$st->execute();
+		$totalRows = $st->fetch();
 
 		$conn = null;
 
-		return( array( "results" => $list, "totalRows" => $totalRows[0] ) );
+		return( array( "results" => $list, "totalRows" => $totalRows[1] ) );
 	}
 
 	public function insert()
 	{
-		if( !is_null( $this-id ) )
+		if( !is_null( $this->id ) )
 			trigger_error( "Article::insert() - Attempting to insert an article that already has its id set!" );
 
 		$conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
 		$query = "INSERT INTO articles ( publicationDate, title, summary,content ) 
-			VALUES( FROM_UNIXTIME( :publicationDate ), :title, ;summary, :content )";
+			VALUES( FROM_UNIXTIME( :publicationDate ), :title, :summary, :content )";
 		$st = $conn->prepare($query);
 		$st->bindValue( ":publicationDate", $this->publicationDate, PDO::PARAM_INT );
 		$st->bindValue( ":title", $this->title, PDO::PARAM_STR );
