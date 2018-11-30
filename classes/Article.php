@@ -78,14 +78,11 @@ class Article
 		}
 
 		// get the total number of articles
-		$query = "SELECT FOUND_ROWS AS totalRows";
-		$st = $conn->prepare( $query );
-		$st->execute();
-		$totalRows = $st->fetch();
+		$totalRows = count($list);
 
 		$conn = null;
 
-		return( array( "results" => $list, "totalRows" => $totalRows[1] ) );
+		return( array( "results" => $list, "totalRows" => $totalRows ) );
 	}
 
 	public function insert()
@@ -100,7 +97,9 @@ class Article
 		$st->bindValue( ":publicationDate", $this->publicationDate, PDO::PARAM_INT );
 		$st->bindValue( ":title", $this->title, PDO::PARAM_STR );
 		$st->bindValue( ":summary", $this->summary, PDO::PARAM_STR );
-		$st->bindValue( ":content", $this->content, PDO::PARAM_STR );
+
+		$contConverted = nl2br( $this->content );
+		$st->bindValue( ":content", $contConverted, PDO::PARAM_STR );
 		$st->execute();
 
 		$this->id = $conn->lastInsertId();
