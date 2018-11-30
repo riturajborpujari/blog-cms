@@ -63,7 +63,7 @@ class Article
 	public static function getList( $numRows = 1000, $order = "publicationDate Desc" )
 	{
 		$conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD);
-		$query = "SELECT SQL_CALC_FOUND_ROWS *, UNIX_TIMESTAMP(publicationDate) AS publicationDate FROM articles ORDER BY " 
+		$query = "SELECT *, UNIX_TIMESTAMP(publicationDate) AS publicationDate FROM articles ORDER BY " 
 			. $order . " LIMIT :numRows" ;
 		$st = $conn->prepare($query);
 		$st->bindValue(":numRows", $numRows, PDO::PARAM_INT);
