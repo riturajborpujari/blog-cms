@@ -128,10 +128,10 @@ class Article
 
 	public function delete()
 	{
-		if( is_null( $this-id ) )
-                        trigger_error( "Article::delete() - Attempting to delete an article that doesn't have its id set!" );
+		if( is_null( $this->id ) )
+            trigger_error( "Article::delete() - Attempting to delete an article that doesn't have its id set!" );
 
-                $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
+        $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
 		$query = "DELETE FROM articles WHERE id = :id" ;
 		$st = $conn->prepare( $query );
 		$st->bindValue( ":id", $this->id, PDO::PARAM_INT );
