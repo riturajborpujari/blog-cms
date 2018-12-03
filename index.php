@@ -11,6 +11,9 @@
     case 'viewArticle':
         viewArticle();
         break;
+    case 'addComment':
+        addComment();
+        break;
     default:
         homepage();
     }
@@ -53,6 +56,19 @@
         $results['pageTitle'] = "Blog Of Rituraj";
 
         require( TEMPLATE_PATH . "/homepage.php" );
+    }
+
+    function addComment()
+    {
+        if( !isset( $_POST['comment'] ))
+            return;
+
+        $comment = new Comment();
+        $comment->storeFromValues($_POST);
+        $comment->publicationDate = time();
+        $comment->insert();
+
+        header( "Location:./?action=viewArticle&articleId=". $comment->articleId);
     }
 
 ?>

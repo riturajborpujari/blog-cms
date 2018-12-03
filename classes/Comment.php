@@ -10,10 +10,10 @@
 class Comment
 {
     private $id = null;                     // used for identification
-    private $publicationDate = null;
+    public $publicationDate = null;
     public $username = null;               // name of the user who posted this comment
-    public $comment = null;                // the actual comment string
-    private $articleId = null;              // the id of the article for which the comment is posted
+    public $commentString = null;                // the actual comment string
+    public $articleId = null;              // the id of the article for which the comment is posted
 
     public function __construct( $data = array() )
     {
@@ -23,8 +23,8 @@ class Comment
             $this->publicationDate = $data['publicationDate'];
         if( isset( $data['username'] ))
             $this->username = preg_replace ( "/[^\.\,\-\_\'\"\@\?\!\:\$ a-zA-Z0-9()]/", "", $data['username'] );
-        if( isset( $data['comment'] ))
-            $this->comment = preg_replace ( "/[^\.\,\-\_\'\"\@\?\!\:\$ a-zA-Z0-9()]/", "", $data['comment'] );
+        if( isset( $data['commentString'] ))
+            $this->commentString = preg_replace ( "/[^\.\,\-\_\'\"\@\?\!\:\$ a-zA-Z0-9()]/", "", $data['commentString'] );
         if( isset( $data['articleId'] ))
             $this->articleId = $data['articleId'];
     }
@@ -50,7 +50,6 @@ class Comment
             $post = new Comment( $row );
             $posts[] = $post;
         }
-
         return $posts;
     }
 
@@ -60,12 +59,12 @@ class Comment
 			trigger_error( "Article::insert() - Attempting to insert a comment that already has its id set!" );
 
         $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
-        $query = "INSERT INTO comments( publicationDate, username, comment, articleId)
-            VALUES( FROM_UNIXTIME( :publicationDate ), :username, :comment, :articleId)";
+        $query = "INSERT INTO comments( publicationDate, username, commentString, articleId)
+            VALUES( FROM_UNIXTIME( :publicationDate ), :username, :commentString, :articleId)";
         $st = $conn->prepare( $query );
         $st->bindValue( ":publicationDate", $this->publicationDate, PDO::PARAM_INT );
         $st->bindValue( ":username", $this->username, PDO::PARAM_STR );
-        $st->bindValue( ":comment", $this->comment, PDO::PARAM_STR );
+        $st->bindValue( ":commentString", $this->commentString, PDO::PARAM_STR );
         $st->bindValue( ":articleId", $this->articleId, PDO::PARAM_INT);
         $st->execute();
 
