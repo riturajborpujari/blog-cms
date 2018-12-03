@@ -36,10 +36,10 @@
             return;
         }
 
-        
         $results = array();
         $results['article'] = Article::getById( (int)$_GET['articleId'] );
         $results['pageTitle'] = $results['article']->title . " | Blog Of Rituraj";
+        $results['comments'] = Comment::getByArticleId( $results['article'] ->id );
 
         require( TEMPLATE_PATH . "/viewArticle.php" );
     }

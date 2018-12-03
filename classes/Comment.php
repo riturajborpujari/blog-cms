@@ -11,8 +11,8 @@ class Comment
 {
     private $id = null;                     // used for identification
     private $publicationDate = null;
-    private $username = null;               // name of the user who posted this comment
-    private $comment = null;                // the actual comment string
+    public $username = null;               // name of the user who posted this comment
+    public $comment = null;                // the actual comment string
     private $articleId = null;              // the id of the article for which the comment is posted
 
     public function __construct( $data = array() )
@@ -20,13 +20,13 @@ class Comment
         if( isset( $data['id'] ))
             $this->id = $data['id'];
         if( isset( $data['publicationDate'] ))
-            $this->publicationDate = $data['publicatioinDate'];
+            $this->publicationDate = $data['publicationDate'];
         if( isset( $data['username'] ))
             $this->username = preg_replace ( "/[^\.\,\-\_\'\"\@\?\!\:\$ a-zA-Z0-9()]/", "", $data['username'] );
         if( isset( $data['comment'] ))
             $this->comment = preg_replace ( "/[^\.\,\-\_\'\"\@\?\!\:\$ a-zA-Z0-9()]/", "", $data['comment'] );
         if( isset( $data['articleId'] ))
-            $this->articleId = $data['artiicleID'];
+            $this->articleId = $data['articleId'];
     }
 
     public function storeFromValues( $params )
@@ -38,8 +38,7 @@ class Comment
     public static function getByArticleId( $aId )
     {
         $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
-        $query = "SELECT *, UNIX_TIMESTAMP(publicationDate) AS publicationDate
-         FROM comments ORDER BY publicationDate DESC WHERE articleId = :aId";
+        $query = "SELECT *, UNIX_TIMESTAMP(publicationDate) AS publicationDate FROM comments WHERE articleId = :aId ORDER BY publicationDate DESC";
         $st = $conn->prepare($query);
         $st->bindValue( ":aId", $aId, PDO::PARAM_INT);
         $st->execute();
@@ -47,6 +46,7 @@ class Comment
         $posts = array();
         while( $row = $st->fetch() )
         {
+            
             $post = new Comment( $row );
             $posts[] = $post;
         }
