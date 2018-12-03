@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS comments
 	id					smallint unsigned NOT NULL auto_increment,
 	publicationDate		date NOT NULL,
 	username			varchar(30) NOT NULL,
-	comment				text NOT NULL,
+	commentString		text NOT NULL,
 	articleId			smallint unsigned NOT NULL,
 	PRIMARY KEY (id, articleId)
 );
