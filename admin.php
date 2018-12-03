@@ -22,11 +22,17 @@
     case 'newArticle':
         newArticle();
         break;
+    case 'viewArticle':
+        viewArticle();
+        break;
     case 'editArticle':
         editArticle();
         break;
     case 'deleteArticle':
         deleteArticle();
+        break;
+    case 'deleteComment':
+        deleteComment();
         break;
     default:
         listArticles();
@@ -95,6 +101,22 @@
         }
     }
 
+    function viewArticle()
+    {
+        if( !isset( $_GET['articleId']) || !$_GET['articleId'] )
+        {
+            listArticles();
+            return;
+        }
+
+        $results = array();
+        $results['article'] = Article::getById( (int)$_GET['articleId'] );
+        $results['pageTitle'] = $results['article']->title . " | Blog Of Rituraj";
+        $results['comments'] = Comment::getByArticleId( $results['article'] ->id );
+
+        require( TEMPLATE_PATH . "/admin/viewArticle.php" );
+    }
+
     function editArticle()
     {
         $results = array();
@@ -140,6 +162,17 @@
         $article->delete();
         header( "Location: admin.php?status=articleDeleted" );
 
+    }
+
+    function deleteComment()
+    {
+        if( !isset( $_GET['commentId']))
+        {
+            listArticles();
+            return;
+        }
+        Comment::deleteById($_GET['commentId']);
+        header( "Location:admin.php");
     }
 
     function listArticles()

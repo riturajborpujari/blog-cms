@@ -9,7 +9,7 @@
 
 class Comment
 {
-    private $id = null;                     // used for identification
+    public $id = null;                     // used for identification
     public $publicationDate = null;
     public $username = null;               // name of the user who posted this comment
     public $commentString = null;                // the actual comment string
@@ -74,15 +74,25 @@ class Comment
 
     public function delete()
     {
-        if( is_null( $this->id ) )
-            trigger_error( "Comment::delete() - Attempting to delete a comment that doesn't have its id set!" );
+        $id = $this->id;
+
+        if( is_null( $id ))
+            trigger_error( "Comment::delete() - Attempting to delete a comment without an id!" );
+
+        
+    }
+
+    public static function deleteById( $id )
+    {
+        if( is_null( $id ))
+            trigger_error( "Comment::delete() - Attempting to delete a comment without an id!" );
 
         $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
         $query = "DELETE FROM comments WHERE id = :id" ;
         $st = $conn->prepare( $query );
-		$st->bindValue( ":id", $this->id, PDO::PARAM_INT );
-		$st->execute();
-
-		$conn = null;
+        $st->bindValue( ":id", $id, PDO::PARAM_INT );
+        $st->execute();
+    
+        $conn = null;
     }
 };
