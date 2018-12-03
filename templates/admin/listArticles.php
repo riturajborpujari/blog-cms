@@ -24,7 +24,7 @@
  
 <?php foreach ( $results['articles'] as $article ) { ?>
  
-        <tr onclick="location='admin.php?action=editArticle&amp;articleId=<?php echo $article->id?>'">
+        <tr onclick="location='admin.php?action=viewArticle&amp;articleId=<?php echo $article->id?>'">
           <td><?php echo date('j M Y', $article->publicationDate)?></td>
           <td>
             <?php 
